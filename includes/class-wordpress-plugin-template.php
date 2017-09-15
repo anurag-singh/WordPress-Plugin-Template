@@ -2,10 +2,10 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class WordPress_Plugin_Template {
+class Admin_Customization {
 
 	/**
-	 * The single instance of WordPress_Plugin_Template.
+	 * The single instance of Admin_Customization.
 	 * @var 	object
 	 * @access  private
 	 * @since 	1.0.0
@@ -84,7 +84,7 @@ class WordPress_Plugin_Template {
 	 */
 	public function __construct ( $file = '', $version = '1.0.0' ) {
 		$this->_version = $version;
-		$this->_token = 'wordpress_plugin_template';
+		$this->_token = 'admin_customization';
 
 		// Load plugin environment variables
 		$this->file = $file;
@@ -106,7 +106,7 @@ class WordPress_Plugin_Template {
 
 		// Load API for generic admin functions
 		if ( is_admin() ) {
-			$this->admin = new WordPress_Plugin_Template_Admin_API();
+			$this->admin = new Admin_Customization_Admin_API();
 		}
 
 		// Handle localisation
@@ -126,7 +126,7 @@ class WordPress_Plugin_Template {
 
 		if ( ! $post_type || ! $plural || ! $single ) return;
 
-		$post_type = new WordPress_Plugin_Template_Post_Type( $post_type, $plural, $single, $description, $options );
+		$post_type = new Admin_Customization_Post_Type( $post_type, $plural, $single, $description, $options );
 
 		return $post_type;
 	}
@@ -143,7 +143,7 @@ class WordPress_Plugin_Template {
 
 		if ( ! $taxonomy || ! $plural || ! $single ) return;
 
-		$taxonomy = new WordPress_Plugin_Template_Taxonomy( $taxonomy, $plural, $single, $post_types, $taxonomy_args );
+		$taxonomy = new Admin_Customization_Taxonomy( $taxonomy, $plural, $single, $post_types, $taxonomy_args );
 
 		return $taxonomy;
 	}
@@ -178,7 +178,10 @@ class WordPress_Plugin_Template {
 	 */
 	public function admin_enqueue_styles ( $hook = '' ) {
 		wp_register_style( $this->_token . '-admin', esc_url( $this->assets_url ) . 'css/admin.css', array(), $this->_version );
+		wp_register_style( 'font-awesome-admin', esc_url( $this->assets_url ) . 'css/font-awesome.min.css', array(), $this->_version );
+
 		wp_enqueue_style( $this->_token . '-admin' );
+		wp_enqueue_style( 'font-awesome-admin' );
 	} // End admin_enqueue_styles ()
 
 	/**
@@ -199,7 +202,7 @@ class WordPress_Plugin_Template {
 	 * @return  void
 	 */
 	public function load_localisation () {
-		load_plugin_textdomain( 'wordpress-plugin-template', false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
+		load_plugin_textdomain( 'admin-customization', false, dirname( plugin_basename( $this->file ) ) . '/lang/' );
 	} // End load_localisation ()
 
 	/**
@@ -209,7 +212,7 @@ class WordPress_Plugin_Template {
 	 * @return  void
 	 */
 	public function load_plugin_textdomain () {
-	    $domain = 'wordpress-plugin-template';
+	    $domain = 'admin-customization';
 
 	    $locale = apply_filters( 'plugin_locale', get_locale(), $domain );
 
@@ -218,14 +221,14 @@ class WordPress_Plugin_Template {
 	} // End load_plugin_textdomain ()
 
 	/**
-	 * Main WordPress_Plugin_Template Instance
+	 * Main Admin_Customization Instance
 	 *
-	 * Ensures only one instance of WordPress_Plugin_Template is loaded or can be loaded.
+	 * Ensures only one instance of Admin_Customization is loaded or can be loaded.
 	 *
 	 * @since 1.0.0
 	 * @static
-	 * @see WordPress_Plugin_Template()
-	 * @return Main WordPress_Plugin_Template instance
+	 * @see Admin_Customization()
+	 * @return Main Admin_Customization instance
 	 */
 	public static function instance ( $file = '', $version = '1.0.0' ) {
 		if ( is_null( self::$_instance ) ) {
@@ -271,5 +274,5 @@ class WordPress_Plugin_Template {
 	private function _log_version_number () {
 		update_option( $this->_token . '_version', $this->_version );
 	} // End _log_version_number ()
-
+	
 }
